@@ -93,3 +93,8 @@ class tcs3472:
         b = self.i2c_bus.read_word_data(ADDR, REG_BLUE_L)
 
         return (r, g, b, c)
+
+    def lux(self):
+        """Return the lux (float) [lx]."""
+
+        return 0.0
