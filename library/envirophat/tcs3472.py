@@ -27,6 +27,14 @@ CH_GREEN = 1
 CH_BLUE = 2
 CH_CLEAR = 3
 
+TCS_GA = 1.0
+TCS_DF = 310
+TCS_R_COEF = 0.136
+TCS_G_COEF = 1.000
+TCS_B_COEF = -0.444
+TCS_C_COEF = 3810
+TCS_C_OFFSET = 1391
+
 class tcs3472:
     def __init__(self, i2c_bus=None, addr=ADDR):
         self._is_setup = False
@@ -96,5 +104,18 @@ class tcs3472:
 
     def lux(self):
         """Return the lux (float) [lx]."""
+        r = raw()[CH_RED]
+        g = raw()[CH_GREEN]
+        b = raw()[CH_BLUE]
+        c = raw()[CH_CLEAR]
+        
+        ir = (r + g + b)/2
+
+        r-ir = r - ir
+        g-ir = g - ir
+        b-ir = b - ir
+
+        cpl = (self.again
+
 
         return 0.0
