@@ -117,6 +117,7 @@ class tcs3472:
 
 
         return 0.0
-
-def get_gain(self):
+        
+    def get_gain(self):
+        raw_gain = i2c_bus.read_byte_data(ADDR, REG_CONTROL)
     
