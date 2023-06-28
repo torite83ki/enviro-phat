@@ -115,7 +115,8 @@ class tcs3472:
         g-ir = g - ir
         b-ir = b - ir
 
-        cpl = (self.again
-
 
         return 0.0
+
+def get_gain(self):
+    
