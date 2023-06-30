@@ -1,4 +1,6 @@
 ADDR = 0x29
+INTG_TIME_MS = 511.2
+
 
 REG_CMD = 0b10000000
 REG_CMD_AUTO_INC = 0b00100000
@@ -35,6 +37,8 @@ TCS_B_COEF = -0.444
 TCS_C_COEF = 3810
 TCS_C_OFFSET = 1391
 
+
+
 class tcs3472:
     def __init__(self, i2c_bus=None, addr=ADDR):
         self._is_setup = False
@@ -42,6 +46,7 @@ class tcs3472:
         self.i2c_bus = i2c_bus
         if not hasattr(i2c_bus, "read_word_data") or not hasattr(i2c_bus, "write_byte_data"):
             raise TypeError("Object given for i2c_bus must implement read_word_data and write_byte_data")
+        self.get_gain()
 
     def setup(self):
         if self._is_setup:
@@ -50,7 +55,7 @@ class tcs3472:
         self._is_setup = True
 
         self.i2c_bus.write_byte_data(ADDR, REG_ENABLE, REG_ENABLE_RGBC | REG_ENABLE_POWER)
-        self.set_integration_time_ms(511.2)
+        self.set_integration_time_ms(INTEG_TIME_MS)
 
     def set_integration_time_ms(self, ms):
         """Set the sensor integration time in milliseconds.
@@ -111,11 +116,25 @@ class tcs3472:
         
         ir = (r + g + b)/2
 
-        r-ir = r - ir
-        g-ir = g - ir
-        b-ir = b - ir
+        r_ir = r - ir
+        g_ir = g - ir
+        b_ir = b - ir
 
-        cpl = (self.again
+        cpl = (self._again * INTEG_TIME_MS)/(TCS_GA * TCS_DF)
+        self.lux = (TCS_R_COEF * r_ir + RCS_G_COEF * g_ir + TCS_B_COEF * b_ir)/cpl
+        return self.lux
+
+    def get_gain(self):
+        raw_gain = self.i2c_bus.read_byte_data(ADDR, REG_CONTROL) 
+        if raw_gain == REG_CONTRL_GAIN_1X:
+            self._gain = 1
+        elif self.raw_gain == REG_CONTROL_GAIN_4X:
+            self._gain = 4
+        elif self.raw_gain == REG_CONTROL_GAIN_16X:
+            self._gain = 16 
+        elif self.raw_gain == REG_CONTROL_GAIN_60X:
+            self._gain = 60 
+        print(raw_gain)
+        return self._gain
 
 
-        return 0.0
