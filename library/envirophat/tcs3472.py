@@ -114,16 +114,14 @@ class tcs3472:
         b = self.raw()[CH_BLUE]
         c = self.raw()[CH_CLEAR]
         
-        ir = (r + g + b -c)/2
+        ir = (r + g + b - c)/2
 
         r_ir = r - ir
         g_ir = g - ir
         b_ir = b - ir
 
         cpl = (self._gain * INTG_TIME_MS)/(TCS_GA * TCS_DF)
-        self._lux = (TCS_R_COEF * r_ir + TCS_G_COEF * g_ir + TCS_B_COEF * b_ir)/cpl
-        print(self._lux)
-        self._lux = int(self._lux)
+        self._lux = int((TCS_R_COEF * r_ir + TCS_G_COEF * g_ir + TCS_B_COEF * b_ir)/cpl)
         return self._lux
 
     def get_gain(self):
