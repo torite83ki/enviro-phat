@@ -55,7 +55,7 @@ class tcs3472:
         self._is_setup = True
 
         self.i2c_bus.write_byte_data(ADDR, REG_ENABLE, REG_ENABLE_RGBC | REG_ENABLE_POWER)
-        self.set_integration_time_ms(INTEG_TIME_MS)
+        self.set_integration_time_ms(INTG_TIME_MS)
 
     def set_integration_time_ms(self, ms):
         """Set the sensor integration time in milliseconds.
@@ -120,7 +120,7 @@ class tcs3472:
         g_ir = g - ir
         b_ir = b - ir
 
-        cpl = (self._again * INTEG_TIME_MS)/(TCS_GA * TCS_DF)
+        cpl = (self._gain * INTG_TIME_MS)/(TCS_GA * TCS_DF)
         self.lux = (TCS_R_COEF * r_ir + RCS_G_COEF * g_ir + TCS_B_COEF * b_ir)/cpl
         return self.lux
 
