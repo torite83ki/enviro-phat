@@ -109,24 +109,26 @@ class tcs3472:
 
     def lux(self):
         """Return the lux (float) [lx]."""
-        r = raw()[CH_RED]
-        g = raw()[CH_GREEN]
-        b = raw()[CH_BLUE]
-        c = raw()[CH_CLEAR]
+        r = self.raw()[CH_RED]
+        g = self.raw()[CH_GREEN]
+        b = self.raw()[CH_BLUE]
+        c = self.raw()[CH_CLEAR]
         
-        ir = (r + g + b)/2
+        ir = (r + g + b -c)/2
 
         r_ir = r - ir
         g_ir = g - ir
         b_ir = b - ir
 
         cpl = (self._gain * INTG_TIME_MS)/(TCS_GA * TCS_DF)
-        self.lux = (TCS_R_COEF * r_ir + RCS_G_COEF * g_ir + TCS_B_COEF * b_ir)/cpl
-        return self.lux
+        self._lux = (TCS_R_COEF * r_ir + TCS_G_COEF * g_ir + TCS_B_COEF * b_ir)/cpl
+        print(self._lux)
+        self._lux = int(self._lux)
+        return self._lux
 
     def get_gain(self):
         raw_gain = self.i2c_bus.read_byte_data(ADDR, REG_CONTROL) 
-        if raw_gain == REG_CONTRL_GAIN_1X:
+        if raw_gain == REG_CONTROL_GAIN_1X:
             self._gain = 1
         elif self.raw_gain == REG_CONTROL_GAIN_4X:
             self._gain = 4
