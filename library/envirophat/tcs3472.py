@@ -108,7 +108,7 @@ class tcs3472:
         return (r, g, b, c)
 
     def lux(self):
-        """Return the lux (float) [lx]."""
+        """Return the lux (int) [lx]."""
         r = self.raw()[CH_RED]
         g = self.raw()[CH_GREEN]
         b = self.raw()[CH_BLUE]
